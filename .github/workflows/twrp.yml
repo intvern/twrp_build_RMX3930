@@ -4,14 +4,14 @@ on:
   workflow_dispatch: # Кнопка для ручного запуска билда
 
 env:
-  MANIFEST_URL: "https://github.com"
+  MANIFEST_URL: "https://github.com/intvern/REALME-C61-DEVICE-TREE-TWRP"
   MANIFEST_BRANCH: "twrp-12.1" # Стабильная база для Unisoc чипсетов
   DEVICE_NAME: "RMX3930"
   BUILD_TARGET: "boot" # У Realme C61 рекавери собирается прямо в boot.img
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Builder
       uses: actions/checkout@v4
