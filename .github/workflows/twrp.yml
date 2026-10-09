@@ -1,0 +1,56 @@
+name: Recovery Build (TWRP)
+
+on:
+  workflow_dispatch: # Кнопка для ручного запуска билда
+
+env:
+  MANIFEST_URL: "https://github.com"
+  MANIFEST_BRANCH: "twrp-12.1" # Стабильная база для Unisoc чипсетов
+  DEVICE_NAME: "RMX3930"
+  BUILD_TARGET: "boot" # У Realme C61 рекавери собирается прямо в boot.img
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Builder
+      uses: actions/checkout@v4
+
+    # Официальный проверенный шаблон GitHub для подготовки Android-окружения
+    - name: Install Build Environment
+      uses: ACat-An-On/action-setup-android-build-environment@master
+
+    - name: Install Additional Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libncurses5 zip layoutconvert libssl-dev bc
+
+    - name: Initialize TWRP Source
+      run: |
+        mkdir ~/twrp
+        cd ~/twrp
+        git config --global user.name "intvern"
+        git config --global user.email "intvern-dev@github.com"
+        repo init --depth=1 -u ${{ env.MANIFEST_URL }} -b ${{ env.MANIFEST_BRANCH }}
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Clone Your Device Tree
+      run: |
+        cd ~/twrp
+        # Скачиваем твоё готовое дерево устройств из основного репозитория
+        git clone https://github.com -b main device/realme/${{ env.DEVICE_NAME }}
+
+    - name: Building Recovery (TWRP)
+      run: |
+        cd ~/twrp
+        export ALLOW_MISSING_DEPENDENCIES=true
+        source build/envsetup.sh
+        lunch twrp_${{ env.DEVICE_NAME }}-eng
+        make clean
+        make ${{ env.BUILD_TARGET }}image -j$(nproc --all)
+
+    - name: Upload Finished Boot Image
+      uses: actions/upload-artifact@v4
+      with:
+        name: TWRP-Realme-C61-Boot
+        path: /home/runner/twrp/out/target/product/RMX3930/boot.img
