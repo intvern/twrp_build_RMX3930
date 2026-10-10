@@ -7,7 +7,7 @@ env:
   MANIFEST_URL: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp'
   MANIFEST_BRANCH: twrp-12.1 # Стабильная база для Unisoc чипсетов
   DEVICE_NAME: RMX3930
-  BUILD_TARGET: boot # У Realme C61 рекавери собирается прямо в boot.img
+  BUILD_TARGET: vendor_boot # У Realme C61 рекавери собирается прямо в boot.img
 
 jobs:
   build:
@@ -77,5 +77,5 @@ jobs:
       - name: Upload Finished Boot Image
         uses: actions/upload-artifact@v4
         with:
-          name: TWRP-Realme-C61-Boot
-          path: /home/runner/twrp/out/target/product/RMX3930/boot.img
+          name: TWRP-Realme-C61-VendorBoot
+          path: /home/runner/twrp/out/target/product/RMX3930/vendor_boot.img
