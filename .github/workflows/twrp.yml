@@ -57,7 +57,10 @@ jobs:
           cd ~/twrp
           RAW_TREE_URL="https://github.com/intvern/REALME-C61-DEVICE-TREE-TWRP"
           CLEAN_TREE_URL=$(echo "$RAW_TREE_URL" | sed 's/[^a-zA-Z0-9:./_-]//g')
-          git clone "$CLEAN_TREE_URL" -b main device/Realme/${{ env.DEVICE_NAME }}
+          git clone $CLEAN_TREE_URL -b main temp_tree
+          mkdir -p device/realme
+          mv temp_tree/device/Realme/RMX3930 device/realme/RMX3930
+          rm -rf temp_tree
 
       - name: Building Recovery (TWRP)
         run: |
