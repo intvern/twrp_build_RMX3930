@@ -59,26 +59,20 @@ jobs:
           CLEAN_TREE_URL=$(echo "$RAW_TREE_URL" | sed 's/[^a-zA-Z0-9:./_-]//g')
           git clone $CLEAN_TREE_URL -b main temp_tree
           mkdir -p device/realme
-          mv temp_tree/device/Realme/RMX3930 device/realme/RMX3930
+          mv temp_tree/device/realme/RMX3930 device/realme/RMX3930
           rm -rf temp_tree
-
-      - name: Link Prebuilt DTB
-        run: |
-         mkdir -p ~/twrp/out/target/product/RMX3930
-         cp ~/twrp/device/realme/RMX3930/prebuilt/dtb.img ~/twrp/out/target/product/RMX3930/dtb.img
-
 
       - name: Building Recovery (TWRP)
         run: |
           cd ~/twrp
           export ALLOW_MISSING_DEPENDENCIES=true
-          
           source build/envsetup.sh
-          lunch twrp_${{ env.DEVICE_NAME }}-eng || lunch omni_${{ env.DEVICE_NAME }}-eng || lunch twrp_RMX3930-eng
-
-          
+          lunch twrp_${{ env.DEVICE_NAME }}-eng
           make clean
+          mkdir -p ~/twrp/out/target/product/RMX3930
+          cp ~/twrp/device/realme/RMX3930/prebuilt/dtb.img ~/twrp/out/target/product/RMX3930/dtb.img
           make ${{ env.BUILD_TARGET }}image -j$(nproc --all)
+
 
       - name: Upload Finished Boot Image
         uses: actions/upload-artifact@v4
