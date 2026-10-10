@@ -62,6 +62,12 @@ jobs:
           mv temp_tree/device/Realme/RMX3930 device/realme/RMX3930
           rm -rf temp_tree
 
+      - name: Link Prebuilt DTB
+        run: |
+         mkdir -p ~/twrp/out/target/product/RMX3930
+         cp ~/twrp/device/realme/RMX3930/prebuilt/dtb.img ~/twrp/out/target/product/RMX3930/dtb.img
+
+
       - name: Building Recovery (TWRP)
         run: |
           cd ~/twrp
