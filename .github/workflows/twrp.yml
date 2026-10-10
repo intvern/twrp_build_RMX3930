@@ -7,7 +7,7 @@ env:
   MANIFEST_URL: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp'
   MANIFEST_BRANCH: twrp-12.1 # Стабильная база для Unisoc чипсетов
   DEVICE_NAME: RMX3930
-  BUILD_TARGET: vendor_boot # У Realme C61 рекавери собирается прямо в boot.img
+  BUILD_TARGET: vendorboot # У Realme C61 рекавери собирается прямо в boot.img
 
 jobs:
   build:
